@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+    <link rel="Stylesheet" type="text/css" href="css/wColorPicker.min.css" />
+    <style>
+      body {
+        margin: 0;
+      }
+      ul.topnav {
+    	list-style-type: none;
+    	margin: 0;
+    	padding: 0;
+    	overflow: hidden;
+    	background-color: #333;
+	  }
+	  ul.topnav li {float: left;}
+	  ul.topnav li a {
+    	display: block;
+    	color: white;
+    	text-align: center;
+    	padding: 14px 16px;
+    	text-decoration: none;
+	  }
+	  ul.topnav li a:hover:not(.active) {background-color: #111;}
+	  ul.topnav li a.active {background-color: #4CAF50;}
+	  ul.topnav li.right {float: right;}
+      #gauche {
+        float: left;
+        position: relative;
+        background-color: #EFECCA;
+        width: 30%;
+      }
+      #droite {
+      	position: relative;
+      	display : flex;
+      }
+      span, button, input {
+        margin: 10px;
+      }
+      button:hover:enabled {
+        box-shadow: 5px 5px 5px grey;
+      }
+      div:hover {
+      	box-shadow: 5px 0px 40px rgba(0,0,0, .2);
+      }
+      #draggable:hover {
+        box-shadow: 5px 5px 5px grey;
+      }
+      img {
+      	width: 100%;
+      	height: auto;
+      }    
+      #contenu {
+        position: relative;
+        width: 100%;
+        /*margin : 10px;*/
+        border-width:2px;
+ 		border-style:dashed;
+ 		border-color:black;
+ 		/*display : flex;*/
+ 		text-align: center;
+      }
+      p {
+      	margin: auto;
+      }
+      #draggable {
+        margin: 10%;
+        width: 80%;
+      }
+      #modeleImageTexte {
+        width: 100%;
+ 		
+      }
+      #divImage {
+        width: 100%;
+        height: 30%;
+        border-width:1px;
+ 		border-style:solid;
+ 		border-color:black;
+		display : flex;
+      }
+      #divTexte {
+        width: 100%;
+        height: 70%;
+        border-width:1px;
+ 		border-style:solid;
+ 		border-color:black;
+		display : flex;
+      }
+      #option {
+      	position: absolute;
+      	top: 0px;
+		right: 0px;
+      }
+      #btnImage {
+      	margin: auto;
+      }
+      #alertMain {
+  	  	position: fixed;
+  	  	top: 80px;
+  	  	/*text-align: center;*/
+  	  	left: 25%;
+  	  	right: 25%;
+  	  	Z-Index: 1;
+  	  }
+	  #editeur, textarea {
+  	    margin: 10% 10% 0 10%;
+  		width: 80%;
+  		height: 200px;
+  		border: 1px solid black;
+  		padding: 5px;
+  		overflow: auto;
+	  }
+	  #wColorPicker{
+        position: relative;
+        float:right;
+        margin-left: 10px ;
+        width: 25px;
+        height: 25px;
+      }
+    </style>
+    
+  </head>
+  <body>
+	<ul id ="navbar" class="topnav">
+  		<li><a class="active" href="#home">Home</a></li>
+  		<li><a href="#news">News</a></li>
+  		<li><a id="addDiv" href="#">Add DIV</a></li>
+  		<li><a id="addImage" href="#">Insérer une image</a></li>
+  		<li><a id="addTextarea" href="#">Insérer du texte</a></li>
+  		<li class="right"><a id="btnHTML" href="#">HTML</a></li>
+	</ul>
+
+    <div class="divMain" id="gauche">
+    	<form id="formUpload" action="upload.php" method="get" enctype="multipart/form-data">
+       		<input type="file" id="file" name="file" style="display: none">
+ 			<input type="submit" value="valider" name="submit" style="display: none">
+ 		</form>
+ 		<div style="display: inline; float: left; margin: 0 10% 0 10% ;">
+			<button class="wysiwyg" id="bold" value="bold" style="font-weight: bold;">G</button>
+			<button class="wysiwyg" id="italic" value="italic" style="font-style: italic;">I</button>
+			<button class="wysiwyg" id="underline" value="underline" style="text-decoration: underline;">S</button>
+       		<select class="wysiwyg" id="police">
+          		<option value="Times New Roman" selected="selected">Times New Roman</option>
+          		<option value="Courier New">Courier New</option>
+          		<option value="Arial">Arial</option>
+       		</select>
+       		<span id="wColorPicker"></span>
+       	
+		
+		</div>
+
+		<div id="editeur" contentEditable style="background-color: #FFFFFF;"></div>
+		<button id="addTexte" style="margin: 0 10% 0 10% ; float: right;">Valider</button>
+		<br/>
+		<button id="btnResultat">Obtenir le HTML en JQuery</button>
+		<br />
+		<p id="info"><p>
+		<textarea id="resultat"></textarea>
+ 		
+ 		
+ 		<!-- 
+    	<div id="option" >
+	    	<a id="add" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-plus"></span></a>
+    	</div>
+       	<div id="draggable">
+  			<img alt="image + texte" src="img/modele_ImageTexte.jpg">
+	  	</div>
+	  	<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Insérer une image</a>
+	  	<p id="info">test</p>
+	  	-->
+    </div>
+    <div class="divMain" id="droite">
+      <div id="contenu">
+      	<!-- <div id="test"></div> -->
+      	<!-- 
+      	<div id="drag" style="position: relative; width:150px; height:150px;">
+      		<div id="option" >
+    			<a id="addTexte" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-plus"></span></a>
+    		</div>
+    		<p>Faites moi glisser</p>
+    	</div>
+    	 -->
+      </div>
+    </div>
+
+    <script src="js/jQuery/jquery-3.1.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script src="js/jQuery/Plugin/wColorPicker.min.js"></script>
+    <script src="js/newsletter.js"></script>
+    
+    
+  </body>
+</html>

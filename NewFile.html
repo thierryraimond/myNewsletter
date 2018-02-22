@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+    <link rel="Stylesheet" type="text/css" href="css/wColorPicker.min.css" />
+	<title>Insert title here</title>
+	<style>
+	.selection {
+		box-shadow: 5px 0px 40px rgba(0,0,0, .2);
+	}
+	.experimentation {
+		display:none;
+	}
+	#divInfo {
+		width: 100%;
+		/*height: 10%;*/
+	}
+    #gauche {
+        float: left;
+        position: relative;
+        background-color: #EFECCA;
+        width: 30%;
+        display:none;
+    }
+    #droite {
+    	float:right;
+      	position: relative;
+      	/*display : flex;*/
+      	width:70%;
+      	border : 5px solid red;
+      	display:none;
+    }
+    #contenu {
+        position: relative;
+        width: 100%;
+        /*margin : 10px;*/
+        border-width:2px;
+ 		border-style:dashed;
+ 		border-color:black;
+ 		/*display : flex;*/
+ 		text-align: center;
+    }
+	#editeur, textarea {
+  	    margin: 0 5% 0 5%;
+  		width: 90%;
+  		height: 200px;
+  		border: 1px solid black;
+  		padding: 5px;
+  		overflow: auto;
+	}
+	#wColorPicker{
+        position: relative;
+        float:right;
+        margin-left: 10px ;
+        width: 25px;
+        height: 25px;
+    }
+    .option {
+      	position: absolute;
+      	top: 0px;
+		right: 0px;
+    }
+    ul.topnav {
+    	list-style-type: none;
+    	margin: 0;
+    	padding: 0;
+    	overflow: hidden;
+    	background-color: #333;
+	  }
+	  ul.topnav li {float: left;}
+	  ul.topnav li a {
+    	display: block;
+    	color: white;
+    	text-align: center;
+    	padding: 14px 16px;
+    	text-decoration: none;
+	  }
+	  ul.topnav li a:hover:not(.active) {background-color: #111;}
+	  ul.topnav li a.active {background-color: #4CAF50;}
+	  ul.topnav li.right {float: right;}
+	  .modifBis {
+	  	display: block;
+	  	padding: 14px 16px;
+	  	border: 1px solid #4CAF50;
+	  }
+	  .menuDown {
+	  	position: relative;
+	  	display: inline-block;
+	  }
+	  .menuDown-content {
+	  	display: none;
+	  	position: absolute;
+	  	background-color: #f9f9f9;
+	  	min-width: 360px;
+	  	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    	padding: 12px 16px;
+    	z-index: 100;
+	  }
+	  .divHover {
+	  	text-align: center;
+	  }
+/*
+	  .divHover:hover {
+
+	  	animation-name: example;
+    	animation-duration: 1s;
+    	background-color:red;
+    	color: white;
+	  }
+*/
+	/* Standard syntax */
+	@keyframes example {
+     0%    {background-color:transparent; left:0px; top:0px;}
+   	 100%  {background-color:red; left:200px; top:0px;}
+	}
+	/* My Navbar */
+	.my-navbar{list-style-type:none;margin:0;padding:0;overflow:hidden;}
+	.my-navbar li{float:left}.my-navbar li a,.w3-navitem{display:block;padding:8px 16px}.my-navbar li a:hover{color:#000;background-color:#ccc}
+	.my-top{position:fixed;width:100%;z-index:1;top:0;}
+	.my-white,.my-hover-white:hover{color:#000!important;background-color:#fff!important}
+	.my-wide{letter-spacing:4px;font-family:"Segoe UI",Arial,sans-serif;}
+	.my-padding-8{padding-top:8px!important;padding-bottom:8px!important}
+	.my-card-2{box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important}
+	.my-margin-left{margin-left:16px!important}
+	.my-margin-right{margin-right:16px!important}
+	.my-right{float:right!important}
+	.my-left{float:left!important}
+	.my-center{text-align:center!important}
+	.my-display-container{position:relative}
+	.my-display-middle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)}
+	@media (max-width:600px){.my-hide-small{display:none!important}}
+	.my-animate-opacity{-webkit-animation:opac 0.8s;animation:opac 0.8s;filter:alpha(opacity=80); -moz-opacity:0.8; opacity:0.8;}
+	/* Credit to bootsnipp.com for the css for the color graph */
+	.colorgraph {
+	  height: 5px;
+	  border-top: 0;
+	  background: #c4e17f;
+	  border-radius: 5px;
+	  background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	  background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	  background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	  background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	}
+	</style>
+  </head>
+<body>
+<!-- Navbar (sit on top) -->
+<div id="my_navbar"> <!-- class="my-top" -->
+  <ul class="my-navbar my-white my-wide my-padding-8 my-card-2">
+    <li>
+      <a href="#home" class="my-margin-left" style="padding:0px;">
+		<img src="img/logo_ma_newsletter.png" style="height:35px;">
+      </a>
+    </li>
+    <li class="my-right newsletter" style="display:none;">
+    	<button class="btn btn-success my-margin-right" id="btnDeconnexion" type="button"><span class="glyphicon glyphicon-user"></span> Deconnexion</button>
+    </li>
+    <li class="my-right authentification">
+    	<button class="btn btn-success my-margin-right" id="btnLogin" type="button" data-toggle="modal" data-target="#modalLogin"><span class="glyphicon glyphicon-user"></span> Connexion</button>
+    </li>
+    <!-- Float links to the right. Hide them on small screens -->
+    <li class="my-right my-hide-small" style="display:none;">
+      <a href="#projects" class="my-left">Projects</a>
+      <a href="#about" class="my-left">About</a>
+      <a href="#contact" class="my-left my-margin-right">Contact</a>
+    </li>
+  </ul>
+</div>
+<!-- Header -->
+<header class="my-display-container my-animate-opacity authentification" style="background:url(img/soleil-entre-les-nuages_626x416.jpg);background-size: cover;background-repeat: no-repeat;">
+  <div class="my-display-middle my-center">
+    <h1 class="w3-xxlarge"><img src="http://www.mediaforma.com/sdz/jquery/ajax-loader.gif"></h1>
+  </div>
+</header>
+
+<div class="divMain newsletter" id="gauche">
+	
+	<div id="divInfo">
+		<div class="controls" id="info"></div>
+	</div>
+	
+	<div class="experimentation">Partie JavaScript<br/>
+		<input type="button" value="G" style="font-weight: bold;" onclick="commande('bold');" />
+		<input type="button" value="I" style="font-style: italic;" onclick="commande('italic');" />
+		<input type="button" value="S" style="text-decoration: underline;" onclick="commande('underline');" />
+		<input type="button" value="Lien" onclick="commande('createLink');" />
+		<input type="button" value="Image" onclick="commande('insertImage');" />
+		<select onchange="commande('heading', this.value); this.selectedIndex = 0;">
+  			<option value="">Titre</option>
+  			<option value="h1">Titre 1</option>
+  			<option value="h2">Titre 2</option>
+  			<option value="h3">Titre 3</option>
+  			<option value="h4">Titre 4</option>
+  			<option value="h5">Titre 5</option>
+  			<option value="h6">Titre 6</option>
+		</select>
+	</div>
+	<div class="texte" style="display: inline; float: left; margin: 0 5% 0 5%;">Partie JQuery<br/>
+		<button class="wysiwyg" id="bold" value="bold" style="font-weight: bold;">G</button>
+		<button class="wysiwyg" id="italic" value="italic" style="font-style: italic;">I</button>
+		<button class="wysiwyg" id="underline" value="underline" style="text-decoration: underline;">S</button>
+       	<select class="wysiwyg" id="police">
+          		<option value="Times New Roman" selected="selected">Times New Roman</option>
+          		<option value="Courier New">Courier New</option>
+          		<option value="Arial">Arial</option>
+       	</select>
+       	<select class="wysiwyg" id="alignement">
+          		<option value="justifyFull" selected="selected">Justifié</option>
+          		<option value="justifyCenter">Centré</option>
+          		<option value="justifyLeft">Gauche</option>
+          		<option value="justifyRight">Droite</option>
+       	</select>
+       	<select class="wysiwyg" id="fontsize">
+          		<option value="1" selected="selected">1</option>
+          		<option value="2">2</option>
+          		<option value="3">3</option>
+          		<option value="4">4</option>
+          		<option value="5">5</option>
+          		<option value="6">6</option>
+          		<option value="7">7</option>
+       	</select>
+       	<span id="wColorPicker"></span>
+       	
+		
+	</div>
+
+	<div class="texte" id="editeur" contentEditable style="background-color: #FFFFFF;"></div>
+	<div class="texte" style="margin: 0 5% 0 5% ; float: right;">
+		<button class="texteModification" id="updateTexte" style="display:none;" >Modifier</button>
+		<button class="texteCreation" id="addTexte">Valider</button>
+	</div>
+	
+	<div class="row modification" style="margin: 10% 10% 0 10% ; display:none;">
+		<ul id ="navbar" class="topnav">
+  			<li><a class="active" id="border" href="#">Bordure</a></li>
+  			<li><a id="effect" href="#">Effets</a></li>
+  			<li class="right"><a id="btnHTML" href="#">HTML</a></li>
+		</ul>
+		<div class="row modifBis" id="updateBorder">
+			<div class="col-md-6" style="height: 50px;">
+				<p>Style de la bordure</p>
+			</div>
+			<div class="col-md-6" style="height: 50px;">
+				<select id="borderStyle">
+          			<option value="solid" selected="selected">solid</option>
+          			<option value="dotted">dotted</option>
+          			<option value="dashed">dashed</option>
+          			<option value="double">double</option>
+          			<option value="groove">groove</option>
+          			<option value="ridge">ridge</option>
+          			<option value="inset">inset</option>
+          			<option value="outset">outset</option>
+          			<option value="none">none</option>
+          			<option value="hiden">hidden</option>
+       			</select>
+			</div>
+			<div class="col-md-6" style="height: 50px;">
+				<p>Largeur de la bordure</p>
+			</div>
+			<div class="col-md-6" style="height: 50px;">
+				<input id="borderWidth" type="range" min="0" max="15" value="1" >
+			</div>
+			<div class="col-md-6" style="height: 50px;">
+				<p>Couleur de la bordure</p>
+			</div>
+			<div class="col-md-6" style="height: 50px;">
+				<select id="borderColor">
+	          		<option value="black" selected="selected">noir</option>
+	          		<option value="white">blanc</option>
+	          		<option value="red">rouge</option>
+	          		<option value="blue">bleu</option>
+	          		<option value="green">vert</option>
+	          		<option value="violet">violet</option>
+	          		<option value="pink">rose</option>
+	          		<option value="yellow">jaune</option>
+	          		<option value="orange">orange</option>
+	          		<option value="grey">gris</option>
+	          		<option value="transparent">transparent</option>
+	       		</select>
+			</div>
+			<div class="col-md-6" style="height: 50px;">
+				<p>bordure arrondie</p>
+			</div>
+			<div class="col-md-6" style="height: 50px;">
+				<input id="borderRadius" type="range" min="0" max="80" value="1" >
+			</div>
+		</div>
+		<div class="row modifBis" id="updateEffect" style="display:none;">
+			<div class="col-md-3" style="height: 50px;">
+				<p>Gradient</p>
+			</div>
+			<div class="col-md-9" style="height: 50px;">
+			<div class="col-md-12">
+				<select id="gradientDirection">
+          			<option value="top" selected="selected">de haut en bas</option>
+          			<option value="left">de gauche à droite</option>
+          			<option value="left top">diagonal haut gauche</option>
+          			<option value="left bottom">diagonal bas gauche</option>
+       			</select>
+			</div>
+			<div class="col-md-6">
+				<select id="gradientColor1">
+	          		<option value="black" selected="selected">noir</option>
+	          		<option value="white">blanc</option>
+	          		<option value="red">rouge</option>
+	          		<option value="blue">bleu</option>
+	          		<option value="green">vert</option>
+	          		<option value="violet">violet</option>
+	          		<option value="pink">rose</option>
+	          		<option value="yellow">jaune</option>
+	          		<option value="orange">orange</option>
+	          		<option value="grey">gris</option>
+	          		<option value="transparent">transparent</option>
+	       		</select>
+			</div>
+			<div class="col-md-6">
+				<select id="gradientColor2">
+	          		<option value="black" selected="selected">noir</option>
+	          		<option value="white">blanc</option>
+	          		<option value="red">rouge</option>
+	          		<option value="blue">bleu</option>
+	          		<option value="green">vert</option>
+	          		<option value="violet">violet</option>
+	          		<option value="pink">rose</option>
+	          		<option value="yellow">jaune</option>
+	          		<option value="orange">orange</option>
+	          		<option value="grey">gris</option>
+	          		<option value="transparent">transparent</option>
+	       		</select>
+			</div>
+			</div>
+		</div>
+	</div>
+	
+
+	<br/>
+	<input class="experimentation" type="button" onclick="resultat();" value="Obtenir le HTML" />
+	<button class="experimentation" id="btnResultat">Obtenir le HTML en JQuery</button>
+	<br />
+	<textarea class="experimentation" id="resultat"></textarea>
+	
+	<button class="btn btn-warning imageCreation" id="btnAddImage" type="button"><span class="glyphicon glyphicon-picture"></span></button>
+
+	
+	<form id="data" style="display:none;">
+  		Upload Image: <input name="uploadImg" type="file" id="file"/><br />
+  		<input type="submit" value="Submit">
+	</form>
+	<br/>
+	<button id="btnModalEmail" style="position: fixed; right: 10px; bottom: 10px; z-index:9999;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalEmail" >Envoyer la newsletter</button>
+	<div class="col-lg-12" id="menuCss" style="position:relative; background-color: black; color: rgba(250,250,250,.8);">
+
+			<div class="row">
+				<div class="col-lg-1" style="padding: 10px; background-color: red;">&nbsp</div>
+				<div class="col-lg-11 divHover" id="divDrag" style="padding: 10px; color:red;"><b>Drag & Drop</b></div>
+			</div>
+			<div class="col-lg-12" id="toggledivDrag" style="display:none; padding: 10px;">
+				<div><button type="button" id="dragRemove">Supprimer Drag & Drop</button></div>
+				<div><button type="button" id="dragAdd">Ajouter Drag & Drop</button></div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-1" style="padding: 10px; background-color: #ffcc00;">&nbsp</div>
+				<div class="col-lg-11 divHover" id="divPosition" style="padding: 10px; color:#ffcc00;"><b>Position</b></div>
+			</div>
+			<div class="col-lg-12" id="toggledivPosition" style="display:none; padding: 10px;">
+				<select id="position" style="color:black;">
+			       	<option value="static" selected="selected">static</option>
+			       	<option value="relative">relative</option>
+			   		<option value="absolute">absolute</option>
+		    		<option value="fixed">fixed</option>
+	       		</select>
+			</div>
+			<div class="row">
+				<div class="col-lg-1" style="padding: 10px; background-color: blue;">&nbsp</div>
+				<div class="col-lg-11 divHover" id="divTaille" style="padding: 10px; color:blue;"><b>Taille</b></div>
+			</div>
+			<div class="col-lg-12" id="toggledivTaille" style="display:none; padding: 10px;">
+				<div class="col-md-6" style="height: 50px;">
+					<p>Largeur</p>
+				</div>
+				<div class="col-md-6" style="height: 50px;">
+					<input id="width" type="range" min=1 max=600 value=1 >
+				</div>
+			</div>
+	</div>
+
+</div>
+
+<div class="divMain newsletter" id="droite" align=center>
+    <div id="contenu" align=center>
+    	<div class="option" id="addModele" style="display:none;"><a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-plus" style="color:blue;"></span></a></div>
+    </div>
+</div>
+
+	<script src="js/jQuery/jquery-3.1.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script src="js/jQuery/Plugin/wColorPicker.min.js"></script>
+    <script src="js/NewFile.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="jquery.color-2.1.2.min.js"></script>
+    
+<!-- Modal envoi email -->
+<div class="modal fade" id="modalEmail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"><b>Envoyer la newsletter</b></h4>
+			</div>
+			<div class="modal-body">
+				<div id="resultatEmail" style="display:none;"></div>
+				<form method="post" action="email.php" id="formEmail">
+					<div class="row">
+        				<div class="col-md-2 form-group">
+          					<button class="btn btn-default" type="button" style="margin:30% 25% ; height:100px;" id="btnEnvoyerMail">
+          						<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+          						<br/>Envoyer
+          					</button>
+        				</div>
+	      				<div class="col-md-10 form-group">
+	      					<div class="row">
+		        				<div class="col-md-2 form-group">
+		        					<div class="menuDown" id="fromMenuDown">
+			        					<button type="button" class="btn btn-default" id="btnFrom" style="width:100px;">
+			        						De
+			        						<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+			        					</button>
+			        					<div class="menuDown-content" id="fromContent">
+			        						<div style="text-align:center;"><img src="http://www.mediaforma.com/sdz/jquery/ajax-loader.gif"></div>
+			        					</div>
+		        					</div>
+		        				</div>
+			        			<div class="col-md-10 form-group">
+			          				<input class="form-control" id="from" name="from" placeholder="sélectionnez un serveur SMTP" type="text" required readonly>
+			          				<span id="fromIdSmtp" style="display:none;"></span>
+			          				<div class="alert alert-danger" id="from-control" style="display:none;">Veuillez sélectionnez un serveur SMTP</div>
+								</div>
+	        				</div>      
+	        				<div class="row"> 				
+	        					<div class="col-md-2 form-group">
+	        						<div class="menuDown" id="toMenuDown">
+			        					<button type="button" class="btn btn-default" id="btnTo" style="width:100px;">
+			        						À...
+			        					</button>
+			        					<div class="menuDown-content" id="toContent">
+			        						<div style="text-align:center;"><img src="http://www.mediaforma.com/sdz/jquery/ajax-loader.gif"></div>
+			        					</div>
+		        					</div>
+	        					</div>
+	        					<div class="col-md-10 form-group">
+	          						<input class="form-control" id="to" name="to" placeholder="sélectionnez une liste de diffusion" type="text" required readonly>
+	          						<span id="toIdListediffusion" style="display:none;"></span>
+	          						<div class="alert alert-danger" id="to-control" style="display:none;">Veuillez sélectionnez une liste de diffusion</div>
+	          					</div>
+	        				</div>
+	        				<div class="row">
+	        					<div class="col-md-2 form-group">
+	        						<div class="menuDown" id="toMenuDown">
+			        					<button type="button" class="btn btn-default" id="btnTo" style="width:100px;">
+			        						Cc
+			        					</button>
+		        					</div>
+	        					</div>
+	        					<div class="col-md-10 form-group">
+	          						<input class="form-control" id="cc" name="cc" placeholder="email en copie" type="email">
+	          					</div>
+	        				</div>
+	           				<div class="row">
+	        					<div class="col-md-2 form-group">
+	        						<div class="menuDown" id="toMenuDown">
+			        					<button type="button" class="btn btn-default" id="btnTo" style="width:100px;">
+			        						Objet
+			        					</button>
+		        					</div>
+	        					</div>
+	        					<div class="col-md-10 form-group">
+	          						<input class="form-control" id="subject" name="subject" placeholder="Objet" type="text" required>
+	          						<div class="alert alert-danger" id="subject-control" style="display:none;">Veuillez saisir l'objet de votre email</div>
+	          					</div>
+	        				</div>       				    				
+	      				</div>
+      				</div> 
+      			</form>
+      			
+<!-- panel pour paramétrer un serveur SMTP -->
+<div class="panel panel-primary" id="panelSmtp" style="display:none;">
+    <div class="panel-heading" id="panelHeadingSmtp">
+    	<button type="button" class="close" aria-label="Close"><span aria-hidden="true" style="color:black;">&times;</span></button>
+        <h3 class="panel-title" id="panelTitleSmtpAjouter">Nouveau serveur de messagerie sortant (SMTP)</h3>
+        <h3 class="panel-title" id="panelTitleSmtpModifer" style="display:none;">Modification du serveur de messagerie sortant (SMTP)</h3>
+    </div>
+    <div class="panel-body">
+        <div class="col-lg-12">
+            <form class="form-horizontal" action="pdo.php" method="post" id="addSmtp">
+                <fieldset>
+                	<input type="number" id="smtpId" name="smtpId" value="" style="display:none;" />
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="smtpLibelle"
+                                 class="col-xs-0 col-sm-4 col-md-3 col-lg-2
+                                control-label">
+                                Libellé :  
+                            </label>
+                        	<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                        		<input type="text" 
+                            		id="smtpLibelle"
+                                	class="form-control"
+                                	placeholder="saisissez un nom pour votre serveur SMTP"
+                                	name="smtpLibelle"
+                                	size="30" 
+                                	maxlength="30"
+                                	value=""
+                                	required
+								/>
+                        	</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="smtpHost"
+								class="col-xs-0 col-sm-4 col-md-3 col-lg-2
+								control-label">
+								Host :
+							</label>
+							<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                                <input type="text" 
+                                    id="smtpHost"
+                                    class="form-control"
+                                    placeholder="exemple: smtp.orange.fr" 
+                                    name="smtpHost" 
+                                    size="100" 
+                                    maxlength="100" 
+                                    value=""
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="smtpPort"
+                                class="col-xs-0 col-sm-4 col-md-3 col-lg-2
+                                control-label">
+                                Port :
+                            </label>
+                            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+	                            <input type="number" 
+                                	id="smtpPort"
+                                    class="form-control"
+                                    placeholder="Entrez le numéro du port SMTP. exemple: 465"
+                                    name="smtpPort"
+                                    size="100" 
+                                    maxlength="100"
+                                    value=""
+                                    required
+                                 />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="smtpSecure"
+                                class="col-xs-0 col-sm-4 col-md-3 col-lg-2
+                                control-label">
+                                chiffrement :
+                            </label>
+                            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+								<select class="form-control" id="smtpSecure" name="smtpSecure">
+	          						<option value="ssl" selected="selected">SSL</option>
+	          						<option value="tls">TLS</option>
+					       		</select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="smtpUser"
+								class="col-xs-0 col-sm-4 col-md-3 col-lg-2
+								control-label">
+								User :
+							</label>
+							<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                                <input type="text" 
+                                    id="smtpUser"
+                                    class="form-control"
+                                    placeholder="Saisissez un nom d'utilisateur" 
+                                    name="smtpUser" 
+                                    size="100" 
+                                    maxlength="100" 
+                                    value=""
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="smtpPassword"
+								class="col-xs-0 col-sm-4 col-md-3 col-lg-2
+								control-label">
+								Password :
+							</label>
+							<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                                <input type="password" 
+                                    id="smtpPassword"
+                                    class="form-control"
+                                    placeholder="Saisissez un mot de passe" 
+                                    name="smtpPassword" 
+                                    size="100" 
+                                    maxlength="100" 
+                                    value=""
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>    
+                    <hr class="colorgraph">  
+                    <div class="row" style="padding-left:16px;padding-right:16px;">
+                        <div class="form-group">
+	                        <input type="text" 
+    	                        id="smtpLibelle_societe"
+                                class="form-control"
+                                placeholder="Saisissez le nom de la société titulaire du SMTP" 
+                                name="smtpLibelle_societe" 
+                                size="100" 
+                                maxlength="100" 
+                                value=""
+                                required
+                             />
+                        </div>
+                        <div class="form-group">
+	                        <input type="text" 
+    	                        id="smtpAdresse_societe"
+                                class="form-control"
+                                placeholder="Saisissez l'adresse complète de votre société. Exemple: 20 rue Dante 06000 Nice" 
+                                name="smtpAdresse_societe" 
+                                size="200" 
+                                maxlength="200" 
+                                value=""
+                                required
+                             />
+                        </div>   
+                        <div class="form-group">
+	                        <input type="text" 
+    	                        id="smtpUrl_ou_email_societe"
+                                class="form-control"
+                                placeholder="Saisissez l'url ou l'email à contacter de votre société. Exemple: www.envicomacte.fr ou contact@envicomacte.fr" 
+                                name="smtpUrl_ou_email_societe" 
+                                size="100" 
+                                maxlength="100" 
+                                value=""
+                                required
+                             />
+                        </div>                                             
+                    </div>                               
+                </fieldset>
+                <hr class="colorgraph">
+                <div class="form-group pull-right">
+                    <button class="btn btn-primary" 
+                        id="ajouter"
+                        type="submit"
+                        value="Ajouter"
+                        name="ajouter">
+                        Ajouter
+                    </button>
+                    <button class="btn btn-success" Style="display:none"; 
+                        id="modifier"
+                        type="submit"
+                        value="Modifier"
+                        name="modifier">
+                        Modifier
+                    </button>
+                    <button class="btn btn-danger"
+                        id="annuler"
+                        type="reset"
+                        value="Effacer"
+                        name="effacer">
+                        Effacer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- panel pour paramétrer un destinataire -->
+<div class="panel panel-primary" id="panelDestinataire" style="display:none;">
+    <div class="panel-heading" id="panelHeadingDestinataire">
+    	<button type="button" class="close" aria-label="Close"><span aria-hidden="true" style="color:black;">&times;</span></button>
+        <h3 class="panel-title" id="panelTitleDestinataireAjouter">Nouveau destinataire</h3>
+    </div>
+    <div class="panel-body">
+        <div class="col-lg-12" id="panel-body-destinataire">
+            <form class="form-horizontal" action="pdo.php" method="post" id="addDestinataire">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-lg-12 form-group">
+                        	<table class="table table-condensed">
+                        		<tbody>
+                        			<tr>
+                        				<td class="col-lg-6">
+                       						<input type="text" 
+				                           		id="destinataireNom"
+				                               	class="form-control"
+				                               	placeholder="saisissez le nom du destinataire"
+				                               	name="destinataireNom"
+				                               	size="30" 
+				                               	maxlength="30"
+				                               	value=""
+			                                	required
+											/>
+										</td>
+										<td class="col-lg-6">
+											<input type="email" 
+				                           		id="destinataireEmail"
+				                               	class="form-control"
+				                               	placeholder="saisissez le nom du destinataire"
+				                               	name="destinataireNom"
+				                               	size="30" 
+				                               	maxlength="30"
+				                               	value=""
+				                               	required
+											/>
+										</td>
+									</tr>	
+                        		</tbody>
+							</table>
+                        </div>
+                    </div>                                   
+                </fieldset>
+                <div class="form-group pull-right">
+                    <button class="btn btn-primary" 
+                        id="ajouter"
+                        type="submit"
+                        value="Ajouter"
+                        name="ajouter">
+                        Ajouter
+                    </button>
+                    <button class="btn btn-danger"
+                        id="annuler"
+                        type="reset"
+                        value="Effacer"
+                        name="effacer">
+                        Effacer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>       			
+      			
+				<div>
+					<button id="btnEnvoyerEmail">Envoyer email</button>
+					<a id="apercu" href="test.html">Aperçu</a>
+				</div>
+				<div style="margin:auto; width:600px; height:600px; border:1px solid blue;">
+					<div id="divApercu" align=center></div>
+				</div>
+			</div>
+			<div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+	        </div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Login -->
+<div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button id="btnModalLoginClose" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"><b>Connectez-vous</b></h4>
+			</div>
+			<div class="modal-body">
+				<div id="resultatLogin" style="display:none;"></div>
+				<form method="post" action="login.php" id="formLogin">
+					<div class="row" style="padding:8px;">
+						<div class="form-group" style="padding-left:8px; padding-right:8px;">
+			          		<input class="form-control" id="user" name="user" placeholder="Adresse e-mail" type="email" required>	
+			       			<div class="alert alert-danger" id="user-control" style="display:none;">Veuillez sélectionnez un serveur SMTP</div>
+						</div>
+						<div class="form-group" style="padding-left:8px; padding-right:8px;">
+			          		<input class="form-control" id="loginMdp" name="loginMdp" placeholder="Mot de passe" type="password" required>	
+			       			<div class="alert alert-danger" id="loginMdp-control" style="display:none;">Veuillez sélectionnez un serveur SMTP</div>
+						</div>
+						<div class="col-xs-9 form-group">
+							<a id="impossible" href="#" style="font-size: 12px;">Impossible de se connecter ?</a><br/>
+							<a id="inscription" href="#" style="font-size: 12px;">Créer un compte</a>
+						</div>
+						<div class="col-xs-3 form-group" style="padding-top:8px;">
+		                    <button class="btn btn-success pull-right" 
+			                 	id="btnValiderLogin"
+			                    type="submit">
+			                    <span class="glyphicon glyphicon-ok"></span>
+			                </button>
+	                	</div>
+					</div>
+				</form>
+				<div class="row" style="padding:8px;display:none;" id="impossibleContent">
+					<hr class="colorgraph">
+					<h2 style="text-align:center;"><small>Mot de passe oublié ?</small></h2>
+					<div id="resultatImpossible" style="display:none;"></div>
+					<form method="post" action="login.php" id="formImpossible">
+						<div class="form-group" style="padding-left:8px; padding-right:8px;">
+			          		<input class="form-control" title="Entrez votre adresse email puis cliquer sur 'envoyer le mot de passe'" id="userImpossible" name="userImpossible" placeholder="Adresse e-mail" type="email" required>	
+			       			<div class="alert alert-danger" id="user-control" style="display:none;">Veuillez sélectionnez un serveur SMTP</div>
+			       			<div class="form-group" style="padding-top:8px;">
+				       			<button class="btn btn-warning"
+				       				style="width:100%; text-align:center;" 
+			                	 	id="btnValiderImpossible"
+			                    	type="submit">
+			                    	<span class="glyphicon glyphicon-envelope"></span>
+			                    	Renvoyer mon mot de passe
+			                	</button>
+			       			</div>
+						</div>
+					</form>
+		        </div>
+		        <div class="row" style="padding:8px;display:none;" id="inscriptionContent">
+					<hr class="colorgraph">
+					<h2 style="text-align:center;"><small>Inscription</small></h2>
+					<div id="resultatInscription" style="display:none;"></div>
+					<form method="post" action="login.php" id="formInscription">
+						<div class="form-group" style="padding-left:8px; padding-right:8px;">
+			          		<input class="form-control" id="userInscription" name="userInscription" placeholder="Adresse e-mail" type="email" required>	
+			       			<div class="alert alert-danger" id="user-control" style="display:none;">Veuillez sélectionnez un serveur SMTP</div>
+			       		</div>
+			    		<div class="form-group" style="padding-left:8px; padding-right:8px;">
+			          		<input class="form-control" id="inscriptionMdp" name="inscriptionMdp" placeholder="Mot de passe" type="password" required>	
+			       			<div class="alert alert-danger" id="inscriptionMdp-control" style="display:none;">Veuillez sélectionnez un serveur SMTP</div>
+			       		</div>
+			       		<div class="form-group" style="padding-left:8px; padding-right:8px;">
+			          		<input class="form-control" id="inscriptionMdpConfirm" name="inscriptionMdpConfirm" placeholder="Confirmer votre mot de passe" type="password" required>	
+			       			<div class="alert alert-danger" id="inscriptionMdpConfirm-control" style="display:none;">Veuillez sélectionnez un serveur SMTP</div>
+			       		</div>
+						<div class="row">
+							<div class="col-xs-4">
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="info" tabindex="7">J'accepte</button>
+			                        <input type="checkbox" name="t_and_c" id="t_and_c" class="hidden" value="1">
+								</span>
+							</div>
+							<div class="col-xs-8" style="font-size: 12px;">
+								 En cliquant sur <strong class="label label-primary">Inscription gratuite</strong>, vous acceptez les <a href="#" data-toggle="modal" data-target="#t_and_c_m">Termes et conditions</a> énoncés par ce site, incluant notre politique d'utilisation des Cookies (inexistante).
+							</div>
+						</div> 		
+			       		<div class="form-group" style="padding-top:8px;">
+				   			<button class="btn btn-primary"
+				   				style="width:100%; text-align:center;" 
+			              	 	id="btnValiderInscription"
+			                   	type="submit">
+			                   	<span class="glyphicon glyphicon-envelope"></span>
+			                   	Inscription gratuite
+			               	</button>
+			   			</div>
+			   		</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Terms and conditions -->
+<div class="modal fade" id="t_and_c_m" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">Terms & Conditions</h4>
+			</div>
+			<div class="modal-body">
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">I Agree</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+</body>
+</html>
